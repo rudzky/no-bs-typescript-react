@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { useRef } from "react";
+import { UL } from "./GenericComponent";
 import { useTodos } from "./useTodos";
 
 export default function App() {
@@ -19,7 +20,33 @@ export default function App() {
         <input type="text" ref={newTodoRef} />
         <button onClick={onAddTodo}>Add new Todo!</button>
       </header>
-      <main>
+      <section>
+        <UL
+          className="super"
+          style={{ listStyleType: "triangle" }}
+          items={todos}
+          itemClick={(item) => console.log(item)}
+          render={(todo) => (
+            <>
+              <input
+                type="checkbox"
+                checked={todo.done}
+                onChange={() => toggleTodo(todo.id)}
+              />
+              {todo.text}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeTodo(todo.id);
+                }}
+              >
+                Remove
+              </button>
+            </>
+          )}
+        />
+      </section>
+      {/* <main>
         {todos.map((todo) => (
           <div key={todo.id}>
             <input
@@ -31,7 +58,7 @@ export default function App() {
             <button onClick={() => removeTodo(todo.id)}>Remove</button>
           </div>
         ))}
-      </main>
+      </main> */}
     </div>
   );
 }
