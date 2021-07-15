@@ -28,8 +28,29 @@ const Incrementer: React.FunctionComponent<{
   value: UseNumberValue;
   setValue: UseNumberSetValue;
 }> = ({ value, setValue }) => (
-  <button onClick={() => setValue}>Increment - {value}</button>
+  <button onClick={() => setValue((prev) => prev + 1)}>
+    Increment - {value}
+  </button>
 );
+
+const Button: React.FunctionComponent<
+  React.DetailedHTMLProps<
+    React.ButtonHTMLAttributes<HTMLButtonElement>,
+    HTMLButtonElement
+  > & {
+    isRevert?: boolean | undefined;
+  }
+> = ({ style, isRevert, children, ...rest }) => {
+  const rotateTheButton = useCallback((isRevert) => {
+    return isRevert ? { transform: "rotate(90deg)" } : null;
+  }, []);
+
+  return (
+    <button {...rest} style={{ ...style, ...rotateTheButton(isRevert) }}>
+      {children}
+    </button>
+  );
+};
 
 function App() {
   const [value, setValue] = useState(0);
@@ -48,6 +69,13 @@ function App() {
       </RenderChildren>
       <List items={["aaa", "bbb", "ccc"]} onClick={onListClick} />
       <Incrementer value={value} setValue={setValue} />
+      <Button
+        onClick={() => console.log("Huh, what do we gonna do?")}
+        style={{ background: "red" }}
+        // isRevert
+      >
+        Fire Up Nukes!
+      </Button>
     </div>
   );
 }
