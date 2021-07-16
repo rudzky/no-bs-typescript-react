@@ -1,4 +1,4 @@
-import { useCallback, useReducer } from "react";
+import { useCallback, useReducer, createContext, useContext } from "react";
 
 interface Todo {
   id: number;
@@ -11,7 +11,16 @@ type ActionType =
   | { type: "TOGGLE_TODO"; id: number }
   | { type: "REMOVE_TODO"; id: number };
 
-export function useTodos(initialTodos: Todo[] = []): {
+type UseTodosManagerResult = ReturnType<typeof useTodosManager>;
+
+const TodoContext = createContext<UseTodosManagerResult>({
+  todos: [],
+  addTodo: () => {},
+  toggleTodo: () => {},
+  removeTodo: () => {},
+});
+
+function useTodosManager(initialTodos: Todo[] = []): {
   todos: Todo[];
   addTodo: (text: string) => void;
   toggleTodo: (id: number) => void;
@@ -50,4 +59,22 @@ export function useTodos(initialTodos: Todo[] = []): {
   }, []);
 
   return { todos, addTodo, toggleTodo, removeTodo };
+}
+
+export function TodosProvider({
+  children,
+  initialValue,
+}: {
+  children: React.ReactChild;
+  initialValue?: Todo[];
+}) {
+  return (
+    <TodoContext.Provider value={useTodosManager(initialValue)}>
+      {children}
+    </TodoContext.Provider>
+  );
+}
+
+export function useTodos() {
+  return useContext(TodoContext);
 }

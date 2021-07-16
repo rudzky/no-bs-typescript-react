@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
 import { useRef } from "react";
 import { UL } from "./GenericComponent";
-import { useTodos } from "./useTodos";
+import { TodosProvider, useTodos } from "./useTodos";
 
-export default function App() {
+function App() {
   const { todos, addTodo, toggleTodo, removeTodo } = useTodos();
   const newTodoRef = useRef<HTMLInputElement>(null);
 
@@ -62,3 +62,21 @@ export default function App() {
     </div>
   );
 }
+
+const AppWrapper = () => {
+  return (
+    <TodosProvider>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "50% 50%",
+        }}
+      >
+        <App />
+        <App />
+      </div>
+    </TodosProvider>
+  );
+};
+
+export default AppWrapper;
