@@ -1,17 +1,23 @@
 import React, { useCallback } from "react";
 import { useRef } from "react";
-import { useTodos } from "./useTodos";
+import { useSelector, useDispatch } from "react-redux";
+import { selectTodos, addTodo, removeTodo } from "./store";
+// import { useTodos } from "./useTodos";
 
 export default function App() {
-  const { todos, addTodo, toggleTodo, removeTodo } = useTodos();
+  // const { todos, addTodo, toggleTodo, removeTodo } = useTodos();
+
+  const dispatch = useDispatch();
+  const todos = useSelector(selectTodos);
+
   const newTodoRef = useRef<HTMLInputElement>(null);
 
   const onAddTodo = useCallback(() => {
     if (newTodoRef.current) {
-      addTodo(newTodoRef.current.value);
+      dispatch(addTodo(newTodoRef.current.value));
       newTodoRef.current.value = "";
     }
-  }, [addTodo]);
+  }, [dispatch]);
 
   return (
     <div>
@@ -22,13 +28,10 @@ export default function App() {
       <main>
         {todos.map((todo) => (
           <div key={todo.id}>
-            <input
-              type="checkbox"
-              checked={todo.done}
-              onChange={() => toggleTodo(todo.id)}
-            />
             {todo.text}
-            <button onClick={() => removeTodo(todo.id)}>Remove</button>
+            <button onClick={() => dispatch(removeTodo(todo.id))}>
+              Remove
+            </button>
           </div>
         ))}
       </main>
