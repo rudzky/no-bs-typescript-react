@@ -1,9 +1,21 @@
 import React, { useCallback } from "react";
 import { useRef } from "react";
-import { useTodos } from "./useTodos";
+import useTodos from "./useTodos";
+
+const JustTheTodos = () => {
+  const { todos } = useTodos((state) => state);
+
+  return (
+    <>
+      {todos.map((todo) => (
+        <p key={todo.id}>{todo.text}</p>
+      ))}
+    </>
+  );
+};
 
 export default function App() {
-  const { todos, addTodo, toggleTodo, removeTodo } = useTodos();
+  const { todos, addTodo, toggleTodo, removeTodo } = useTodos((state) => state);
   const newTodoRef = useRef<HTMLInputElement>(null);
 
   const onAddTodo = useCallback(() => {
@@ -32,6 +44,7 @@ export default function App() {
           </div>
         ))}
       </main>
+      <JustTheTodos />
     </div>
   );
 }
